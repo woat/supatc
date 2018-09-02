@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"regexp"
 	"strings"
+	"sync"
 )
 
 type Item struct {
@@ -16,14 +17,15 @@ type Item struct {
 }
 
 const (
-	url = "https://www.supremenewyork.com/shop"
+	URL          = "https://www.supremenewyork.com/shop"
+	SEARCH_QUERY = "rayon"
 )
 
 func main() {
-	raw := fetchHTML(url)
+	raw := fetchHTML(URL)
 	items := parseLinkNodes(raw)
 	fetchItemNames(items)
-	findItem("black", items)
+	findItem(SEARCH_QUERY, items)
 }
 
 func fetchHTML(url string) string {
@@ -68,10 +70,16 @@ func rLinkSearch(n *html.Node, l *[]Item) {
 }
 
 func fetchItemNames(l []Item) {
+	var wg sync.WaitGroup
+	wg.Add(len(l))
 	for i := 0; i < len(l); i++ {
-		raw := fetchHTML(url + "/" + l[i].category + "/" + l[i].slug)
-		l[i].name = parseItemName(raw)
+		go func(i int, l []Item) {
+			defer wg.Done()
+			raw := fetchHTML(URL + "/" + l[i].category + "/" + l[i].slug)
+			l[i].name = parseItemName(raw)
+		}(i, l)
 	}
+	wg.Wait()
 }
 
 func parseItemName(raw string) string {
