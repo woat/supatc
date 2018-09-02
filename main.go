@@ -17,15 +17,15 @@ type Item struct {
 }
 
 const (
-	URL          = "https://www.supremenewyork.com/shop"
-	SEARCH_QUERY = "rayon"
+	url         = "https://www.supremenewyork.com/shop"
+	searchQuery = "rayon"
 )
 
 func main() {
-	raw := fetchHTML(URL)
+	raw := fetchHTML(url)
 	items := parseLinkNodes(raw)
 	fetchItemNames(items)
-	findItem(SEARCH_QUERY, items)
+	findItem(searchQuery, items)
 }
 
 func fetchHTML(url string) string {
@@ -42,18 +42,20 @@ func fetchHTML(url string) string {
 	return string(raw)
 }
 
+// The anchor links contains all the product slugs available for current drop.
+// Searching through each href and matching it toward the shop slug will
+// return a list of all the products slug ready for further parsing.
 func parseLinkNodes(raw string) []Item {
 	doc, err := html.Parse(strings.NewReader(raw))
 	if err != nil {
 		panic(err)
 	}
+
 	l := []Item{}
 	rLinkSearch(doc, &l)
 	return l
 }
 
-// Used in parseLinkNodes to find anchor tags that have a shop href.
-// We must match for /shop/[item.category]/[item.slug].
 func rLinkSearch(n *html.Node, l *[]Item) {
 	if n.Type == html.ElementNode && n.Data == "a" {
 		for _, a := range n.Attr {
@@ -64,21 +66,26 @@ func rLinkSearch(n *html.Node, l *[]Item) {
 			}
 		}
 	}
+
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		rLinkSearch(c, l)
 	}
 }
 
+// Once the slugs are retrieved then the item names can be found through
+// parsing the <title> of each page.
 func fetchItemNames(l []Item) {
 	var wg sync.WaitGroup
 	wg.Add(len(l))
+
 	for i := 0; i < len(l); i++ {
 		go func(i int, l []Item) {
 			defer wg.Done()
-			raw := fetchHTML(URL + "/" + l[i].category + "/" + l[i].slug)
+			raw := fetchHTML(url + "/" + l[i].category + "/" + l[i].slug)
 			l[i].name = parseItemName(raw)
 		}(i, l)
 	}
+
 	wg.Wait()
 }
 
@@ -87,6 +94,7 @@ func parseItemName(raw string) string {
 	if err != nil {
 		panic(err)
 	}
+
 	return rNameSearch(doc)
 }
 
@@ -94,15 +102,19 @@ func rNameSearch(n *html.Node) string {
 	if n.Type == html.ElementNode && n.Data == "title" {
 		return n.FirstChild.Data
 	}
+
 	for c := n.FirstChild; c != nil; c = c.NextSibling {
 		s := rNameSearch(c)
 		if s != "" {
 			return s
 		}
 	}
+
 	return ""
 }
 
+// Connecting the item slug to a name will allow for features such as
+// add-to-cart by name become very easy.
 func findItem(sep string, items []Item) {
 	for _, item := range items {
 		in := strings.ToLower(item.name)
