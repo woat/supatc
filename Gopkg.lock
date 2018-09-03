@@ -2,37 +2,6 @@
 
 
 [[projects]]
-  digest = "1:a62f6ed230a8cd138a9efbe718e7d0b0294f139266f5f55cd942769a9aac8de2"
-  name = "github.com/PuerkitoBio/goquery"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "dc2ec5c7ca4d9aae063b79b9f581dd3ea6afd2b2"
-  version = "v1.4.1"
-
-[[projects]]
-  digest = "1:66b3310cf22cdc96c35ef84ede4f7b9b370971c4025f394c89a2638729653b11"
-  name = "github.com/andybalholm/cascadia"
-  packages = ["."]
-  pruneopts = "UT"
-  revision = "901648c87902174f774fac311d7f176f8647bdaa"
-  version = "v1.0.0"
-
-[[projects]]
-  digest = "1:845f86e5713f02a34145d0d775fa5737f1b1f5399c39bc403189aa3b767a6876"
-  name = "github.com/headzoo/surf"
-  packages = [
-    ".",
-    "agent",
-    "browser",
-    "errors",
-    "jar",
-    "util",
-  ]
-  pruneopts = "UT"
-  revision = "60198774ccce43e1d26c80e961497b7d262460b3"
-  version = "v1.0.0"
-
-[[projects]]
   branch = "master"
   digest = "1:0185c27476ac2aa653c9b932843b41409b9a42a8f38b09c8e25c8fb1fcd499c5"
   name = "golang.org/x/net"
@@ -46,9 +15,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  input-imports = [
-    "github.com/headzoo/surf",
-    "golang.org/x/net/html",
-  ]
+  input-imports = ["golang.org/x/net/html"]
   solver-name = "gps-cdcl"
   solver-version = 1
