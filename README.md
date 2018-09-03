@@ -1,4 +1,4 @@
-# Shopperbot (only for Supreme)
+# supatc
 
 
 ##### Current Status: Worthless
