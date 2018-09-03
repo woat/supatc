@@ -33,8 +33,8 @@ func (d *Downloader) download(slug string) string {
 }
 
 // See inv_test.go for example.
-func NewDownloader(fp PageFetcher) *Downloader {
-	return &Downloader{fetchPage: fp}
+func NewDownloader(pf PageFetcher) *Downloader {
+	return &Downloader{fetchPage: pf}
 }
 
 // Default PageFetcher for this package.

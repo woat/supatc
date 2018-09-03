@@ -2,17 +2,123 @@
 
 
 [[projects]]
-  digest = "1:2e3c336fc7fde5c984d2841455a658a6d626450b1754a854b3b32e7a8f49a07a"
-  name = "github.com/google/go-cmp"
+  branch = "master"
+  digest = "1:4ee91817df7ef5e32afccd67832ca343a20ef41baa0de06d48fba6df056b3191"
+  name = "github.com/chromedp/cdproto"
   packages = [
-    "cmp",
-    "cmp/internal/diff",
-    "cmp/internal/function",
-    "cmp/internal/value",
+    ".",
+    "accessibility",
+    "animation",
+    "applicationcache",
+    "audits",
+    "browser",
+    "cachestorage",
+    "cdp",
+    "css",
+    "database",
+    "debugger",
+    "deviceorientation",
+    "dom",
+    "domdebugger",
+    "domsnapshot",
+    "domstorage",
+    "emulation",
+    "headlessexperimental",
+    "heapprofiler",
+    "indexeddb",
+    "input",
+    "inspector",
+    "io",
+    "layertree",
+    "log",
+    "memory",
+    "network",
+    "overlay",
+    "page",
+    "performance",
+    "profiler",
+    "runtime",
+    "security",
+    "serviceworker",
+    "storage",
+    "systeminfo",
+    "target",
+    "testing",
+    "tethering",
+    "tracing",
   ]
   pruneopts = "UT"
-  revision = "3af367b6b30c263d47e8895973edcca9a49cf029"
-  version = "v0.2.0"
+  revision = "0a134b90aa9fdcaf1e71b21521329e7b8a42c5eb"
+
+[[projects]]
+  digest = "1:13e2ffaa15cf117544a44b046c0438063047ee1b963ef9312ce7758c27cdaebc"
+  name = "github.com/chromedp/chromedp"
+  packages = [
+    ".",
+    "client",
+    "kb",
+    "runner",
+  ]
+  pruneopts = "UT"
+  revision = "34591780d9d429c470ccf81a2760c40245fc823a"
+  version = "v0.1.2"
+
+[[projects]]
+  digest = "1:2694597a20d303502ad1b7f1cc688977c7dc34da732ccf4d27e98b552cceed5b"
+  name = "github.com/disintegration/imaging"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0bd5694c78c9c3d9a3cd06a706a8f3c59296a9ac"
+  version = "v1.5.0"
+
+[[projects]]
+  digest = "1:7b5c6e2eeaa9ae5907c391a91c132abfd5c9e8a784a341b5625e750c67e6825d"
+  name = "github.com/gorilla/websocket"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "66b9c49e59c6c48f0ffce28c2d8b8a5678502c6d"
+  version = "v1.4.0"
+
+[[projects]]
+  branch = "master"
+  digest = "1:901625a0300fa83074dcf2510424c26a19dc3edadf67b34ca45a78f879ac4b0c"
+  name = "github.com/knq/snaker"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "d9ad1e7f342a5b58202aa92c5f1106d7bb8b9c73"
+
+[[projects]]
+  branch = "master"
+  digest = "1:4bc4b80749499a818176b07698dc72025610f5570168a47a94ffd38709e4a5f0"
+  name = "github.com/knq/sysutil"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "0218e141a794643e8c0fa283b9cd076fc0df662d"
+
+[[projects]]
+  branch = "master"
+  digest = "1:aa3d8d42865c42626b5c1add193692d045b3188b1479f0a0a88690d21fe20083"
+  name = "github.com/mailru/easyjson"
+  packages = [
+    ".",
+    "buffer",
+    "jlexer",
+    "jwriter",
+  ]
+  pruneopts = "UT"
+  revision = "60711f1a8329503b04e1c88535f419d0bb440bff"
+
+[[projects]]
+  branch = "master"
+  digest = "1:d3d337e91c35f337d548873978c858ecb723168a6303a41a3ba625c79094f899"
+  name = "golang.org/x/image"
+  packages = [
+    "bmp",
+    "tiff",
+    "tiff/lzw",
+  ]
+  pruneopts = "UT"
+  revision = "c73c2afc3b812cdd6385de5a50616511c4a3d458"
 
 [[projects]]
   branch = "master"
@@ -29,7 +135,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
-    "github.com/google/go-cmp/cmp",
+    "github.com/chromedp/chromedp",
     "golang.org/x/net/html",
   ]
   solver-name = "gps-cdcl"
