@@ -7,7 +7,7 @@ import (
 
 func main() {
 	fmt.Println("Main running.")
-	l := inv.Retrieve()
+	l := inv.Retrieve(inv.StdDl())
 	fmt.Printf("Retrieve running... %v", l)
 	if fnd, ok := inv.Find("black", l); ok {
 		fmt.Printf("Find running... %v", fnd)

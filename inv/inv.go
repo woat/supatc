@@ -10,15 +10,29 @@ import (
 	"sync"
 )
 
+const (
+	url = "https://www.supremenewyork.com/shop"
+)
+
 type Item struct {
 	name     string
 	category string
 	slug     string
 }
 
-const (
-	url = "https://www.supremenewyork.com/shop"
-)
+type PageFetcher func(url string) string
+
+type Downloader struct {
+	fetchPage PageFetcher
+}
+
+func (d *Downloader) download() string {
+	return d.fetchPage(url)
+}
+
+func NewDownloader(fp PageFetcher) *Downloader {
+	return &Downloader{fetchPage: fp}
+}
 
 func fetchHTML(url string) string {
 	resp, err := http.Get(url)
@@ -90,6 +104,8 @@ func parseItemName(raw string) string {
 	return rNameSearch(doc)
 }
 
+// Connecting the item slug to a name will allow for features such as
+// add-to-cart by name become very easy.
 func rNameSearch(n *html.Node) string {
 	if n.Type == html.ElementNode && n.Data == "title" {
 		return n.FirstChild.Data
@@ -105,10 +121,12 @@ func rNameSearch(n *html.Node) string {
 	return ""
 }
 
-// Connecting the item slug to a name will allow for features such as
-// add-to-cart by name become very easy.
-func Retrieve() []Item {
-	raw := fetchHTML(url)
+func StdDl() *Downloader {
+	return NewDownloader(fetchHTML)
+}
+
+func Retrieve(d *Downloader) []Item {
+	raw := d.download()
 	items := parseLinkNodes(raw)
 	fetchItemNames(items)
 	return items
