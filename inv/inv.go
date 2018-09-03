@@ -1,3 +1,4 @@
+// Package inv is used to find, parse, and locate all items stocked.
 package inv
 
 import (
@@ -31,7 +32,7 @@ func (d *Downloader) download(slug string) string {
 	return d.fetchPage(url + slug)
 }
 
-// See inv_test.go for mock example.
+// See inv_test.go for example.
 func NewDownloader(fp PageFetcher) *Downloader {
 	return &Downloader{fetchPage: fp}
 }
@@ -66,31 +67,29 @@ func parseLinkNodes(raw string) []Item {
 }
 
 func rLinkSearch(n *html.Node, l *[]Item) {
-	if isTag("a", n) {
-		for _, a := range n.Attr {
-			if isItemLink(a) {
-				s := strings.Split(a.Val, "/")
+	if hasTag("a", n) {
+		for _, attr := range n.Attr {
+			if hasItemLink(attr) {
+				s := strings.Split(attr.Val, "/")
 				*l = append(*l, Item{category: s[2], slug: s[3]})
 			}
 		}
 	}
 
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		rLinkSearch(c, l)
+	for cn := n.FirstChild; cn != nil; cn = cn.NextSibling {
+		rLinkSearch(cn, l)
 	}
 }
 
-func isTag(t string, n *html.Node) bool {
+func hasTag(t string, n *html.Node) bool {
 	return n.Type == html.ElementNode && n.Data == t
 }
 
-func isItemLink(a html.Attribute) bool {
+func hasItemLink(a html.Attribute) bool {
 	r, _ := regexp.Compile("/shop/.*?/.*")
 	return a.Key == "href" && r.MatchString(a.Val)
 }
 
-// Once the slugs are retrieved then the item names can be found through
-// parsing the <title> of each page.
 func fetchItemNames(l []Item, d *Downloader) {
 	var wg sync.WaitGroup
 	wg.Add(len(l))
@@ -98,6 +97,7 @@ func fetchItemNames(l []Item, d *Downloader) {
 	for i := 0; i < len(l); i++ {
 		go func(i int, l []Item) {
 			defer wg.Done()
+
 			raw := d.download("/" + l[i].category + "/" + l[i].slug)
 			l[i].name = parseItemName(raw)
 		}(i, l)
@@ -115,26 +115,22 @@ func parseItemName(raw string) string {
 	return rNameSearch(doc)
 }
 
-// Connecting the item slug to a name will allow for features such as
-// add-to-cart by name become very easy.
 func rNameSearch(n *html.Node) string {
-	if isTag("title", n) {
+	if hasTag("title", n) {
 		return n.FirstChild.Data
 	}
 
-	for c := n.FirstChild; c != nil; c = c.NextSibling {
-		s := rNameSearch(c)
-		// TODO: This might infinite loop.
-		if s != "" {
-			return s
+	for cn := n.FirstChild; cn != nil; cn = cn.NextSibling {
+		title := rNameSearch(cn)
+		if title != "" {
+			return title
 		}
 	}
 
 	return ""
 }
 
-// Standard Downloader available for usuage in cross-lib.
-// Might be an anti-pattern, but TDD GOD.
+// Standard Downloader available for usuage in cross-pkg.
 func StdDl() *Downloader {
 	return NewDownloader(fetchHTML)
 }
@@ -151,7 +147,7 @@ func Retrieve(d *Downloader) []Item {
 // Takes a search query and item list returns a new item list of the matches.
 // Use v, ok convention.
 func Find(q string, l []Item) ([]Item, bool) {
-	found := make([]Item, 0)
+	var found []Item
 
 	for _, item := range l {
 		r, _ := regexp.Compile("(?i)" + q)
@@ -164,5 +160,5 @@ func Find(q string, l []Item) ([]Item, bool) {
 		return found, true
 	}
 
-	return found, false
+	return nil, false
 }

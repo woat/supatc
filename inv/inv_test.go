@@ -31,7 +31,7 @@ func TestFind(t *testing.T) {
 		expected []Item
 	}{
 		{"PaNts", []Item{tl[0], tl[1]}},
-		{"shorts", []Item{}},
+		{"shorts", nil},
 		{"ten", []Item{tl[1]}},
 		{"a", tl},
 	}
