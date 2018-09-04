@@ -1,4 +1,5 @@
-// Package inv is used to find, parse, and locate all items stocked.
+// Package inv is used to find, parse, and locate all items stocked. The amount
+// of recursion found here does make me a bit sad.
 package inv
 
 import (
@@ -15,9 +16,9 @@ const (
 )
 
 type Item struct {
-	name     string
-	category string
-	slug     string
+	Name     string
+	Category string
+	Slug     string
 }
 
 // Downloader will hold a PageFetcher for use in dependency injection.
@@ -71,7 +72,7 @@ func rLinkSearch(n *html.Node, l *[]Item) {
 		for _, attr := range n.Attr {
 			if hasItemLink(attr) {
 				s := strings.Split(attr.Val, "/")
-				*l = append(*l, Item{category: s[2], slug: s[3]})
+				*l = append(*l, Item{Category: s[2], Slug: s[3]})
 			}
 		}
 	}
@@ -90,20 +91,57 @@ func hasItemLink(a html.Attribute) bool {
 	return a.Key == "href" && r.MatchString(a.Val)
 }
 
-func fetchItemNames(l []Item, d *Downloader) {
+// The usage of pointers in this function makes me feel sad.
+func fetchItemInfo(l *[]Item, d *Downloader) {
+	var is []Item
+	mx := &sync.Mutex{}
+
 	var wg sync.WaitGroup
-	wg.Add(len(l))
+	wg.Add(len(*l))
 
-	for i := 0; i < len(l); i++ {
-		go func(i int, l []Item) {
+	for i := 0; i < len(*l); i++ {
+		go func(i int, l *[]Item) {
 			defer wg.Done()
-
-			raw := d.download("/" + l[i].category + "/" + l[i].slug)
-			l[i].name = parseItemName(raw)
+			raw := d.download("/" + (*l)[i].Category + "/" + (*l)[i].Slug)
+			if !outOfStock(raw) {
+				(*l)[i].Name = parseItemName(raw)
+				mx.Lock()
+				is = append(is, (*l)[i])
+				mx.Unlock()
+			}
 		}(i, l)
 	}
 
 	wg.Wait()
+	*l = is
+}
+
+func outOfStock(raw string) bool {
+	doc, err := html.Parse(strings.NewReader(raw))
+	if err != nil {
+		panic(err)
+	}
+
+	return rStockSearch(doc)
+}
+
+func rStockSearch(n *html.Node) bool {
+	if hasTag("b", n) {
+		for _, attr := range n.Attr {
+			if attr.Key == "class" {
+				return true
+			}
+		}
+	}
+
+	for cn := n.FirstChild; cn != nil; cn = cn.NextSibling {
+		res := rStockSearch(cn)
+		if res != false {
+			return res
+		}
+	}
+
+	return false
 }
 
 func parseItemName(raw string) string {
@@ -130,28 +168,29 @@ func rNameSearch(n *html.Node) string {
 	return ""
 }
 
-// Standard Downloader available for usuage in cross-pkg.
+// Standard Downloader available for usuage in cross pkg.
 func StdDl() *Downloader {
 	return NewDownloader(fetchHTML)
 }
 
-// Retrieves all inventory information available using a Downloader.
+// Retrieves all inventory information available using a Downloader. I might
+// have only written this just to test it. Open/Closed principle?
 // See Downloader, PageFetcher, fetchHTML.
 func Retrieve(d *Downloader) []Item {
 	raw := d.download("")
 	items := parseLinkNodes(raw)
-	fetchItemNames(items, d)
+	fetchItemInfo(&items, d)
 	return items
 }
 
 // Takes a search query and item list returns a new item list of the matches.
-// Use v, ok convention.
+// A feature for a future feature.
 func Find(q string, l []Item) ([]Item, bool) {
 	var found []Item
 
 	for _, item := range l {
 		r, _ := regexp.Compile("(?i)" + q)
-		if r.MatchString(item.name) {
+		if r.MatchString(item.Name) {
 			found = append(found, item)
 		}
 	}

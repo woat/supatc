@@ -1,3 +1,4 @@
+// TODO: Test inStock
 package inv
 
 import (
