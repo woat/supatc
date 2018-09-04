@@ -2,12 +2,13 @@
 # supatc
 
 
-##### Current Status: not-so-worthless
+##### Current Status: starting to get somewhat useful
 
 Specs Implemented (so far):
-- Look up products via name and return slug.
+- Automatic SKU lookup by availability.
+- Automatic SKU lookup by keywords.
 - Add product to cart.
-- Checkout flow.
+- Anti-bot checkout + billing flow.
 
 ```
 Todo List
@@ -15,7 +16,12 @@ Todo List
 [x] Lookup by name
 [x] Add to cart
 [x] Checkout
-[ ] Discard sold out
-[ ] Config user billing info
-[ ] Run in parallel with proxy
+[x] Discard sold out
+[x] Config user billing info
+[ ] Enable clothing sizes
+[ ] Increase add to cart speed
+[ ] Captcha work
+[ ] Lightning fill option
+[ ] Run option in parallel with proxy
+[ ] Run option headless
 ```
