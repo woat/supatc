@@ -3,6 +3,14 @@
 
 [[projects]]
   branch = "master"
+  digest = "1:fca75464ffc131da4a1c76e80dddf3186ec16223963cdc0cfe05538349b24a94"
+  name = "github.com/andlabs/ui"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "867a9e5a498d85e2722730ed88c5f00560c7c354"
+
+[[projects]]
+  branch = "master"
   digest = "1:4ee91817df7ef5e32afccd67832ca343a20ef41baa0de06d48fba6df056b3191"
   name = "github.com/chromedp/cdproto"
   packages = [
@@ -135,7 +143,9 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/andlabs/ui",
     "github.com/chromedp/chromedp",
+    "github.com/chromedp/chromedp/kb",
     "golang.org/x/net/html",
   ]
   solver-name = "gps-cdcl"
