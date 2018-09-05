@@ -2,10 +2,11 @@
 package inv
 
 import (
+	"bytes"
+	"encoding/gob"
 	"fmt"
 	"io/ioutil"
 	"os"
-	"reflect"
 	"strings"
 	"testing"
 )
@@ -39,7 +40,7 @@ func TestFind(t *testing.T) {
 
 	for _, q := range tb {
 		actual, _ := Find(q.in, tl)
-		if !reflect.DeepEqual(q.expected, actual) {
+		if compareItems(q.expected, actual) {
 			t.Errorf("Could not find items for query: `%s` (slices not equal).\n"+
 				"Expected:\n %v \n"+
 				"Actual:\n %v \n", q.in, q.expected, actual)
@@ -49,20 +50,21 @@ func TestFind(t *testing.T) {
 
 func TestRetrieve(t *testing.T) {
 	d := NewDownloader(mockPageFetcher)
-	l := Retrieve(d)
-	tl := []Item{
+	actual := Retrieve(d)
+	expected := []Item{
 		Item{"item_name_1", "item_cat_1", "item_slug_1"},
 		Item{"item_name_2", "item_cat_2", "item_slug_2"},
 		Item{"item_name_3", "item_cat_3", "item_slug_3"},
 	}
 
-	if !reflect.DeepEqual(l, tl) {
+	if compareItems(expected, actual) {
 		t.Errorf("Could not retrieve items (slices not equal).\n"+
 			"Expected:\n %v \n"+
-			"Actual:\n %v \n", tl, l)
+			"Actual:\n %v \n", expected, actual)
 	}
 }
 
+// URLs are generated from shop.html
 func mockPageFetcher(url string) string {
 	s := strings.Split(url, "/")
 
@@ -80,4 +82,15 @@ func mockPageFetcher(url string) string {
 
 	d, _ := ioutil.ReadFile(ttslug)
 	return string(d)
+}
+
+func compareItems(a, b []Item) bool {
+	var buf bytes.Buffer
+	gob.NewEncoder(&buf).Encode(append(a, b...))
+
+	c := 0
+	for _, x := range buf.Bytes() {
+		c ^= int(x)
+	}
+	return c == 0
 }

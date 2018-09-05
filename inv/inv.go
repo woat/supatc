@@ -3,6 +3,7 @@
 package inv
 
 import (
+	"fmt"
 	"golang.org/x/net/html"
 	"io/ioutil"
 	"net/http"
@@ -68,6 +69,7 @@ func parseLinkNodes(raw string) []Item {
 }
 
 func rLinkSearch(n *html.Node, l *[]Item) {
+	fmt.Println(n.Data)
 	if hasTag("a", n) {
 		for _, attr := range n.Attr {
 			if hasItemLink(attr) {
