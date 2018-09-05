@@ -17,23 +17,21 @@ func setupUI() {
 		return true
 	})
 
-	tab := ui.NewTab()
-	mwin.SetChild(tab)
-	mwin.SetMargined(true)
+	t := ui.NewTab()
 
-	tab.Append("Tasks", makeTasksPage())
-	tab.SetMargined(0, true)
-
-	tab.Append("Billing", makeBillingPage())
-	tab.SetMargined(1, true)
-
+	t.Append("Tasks", makeTasksPage())
+	t.SetMargined(0, true)
+	t.Append("Billing", makeBillingPage())
+	t.SetMargined(1, true)
 	/*
-		tab.Append("Cards", makeAccountsPage())
-		tab.SetMargined(2, true)
-
-		tab.Append("Settings", makeSettingsPage)
-		tab.SetMargined(3, true)
+		t.Append("Cards", makeAccountsPage())
+		t.SetMargined(2, true)
+		t.Append("Settings", makeSettingsPage)
+		t.SetMargined(3, true)
 	*/
+
+	mwin.SetChild(t)
+	mwin.SetMargined(true)
 
 	mwin.Show()
 }
