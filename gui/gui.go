@@ -1,4 +1,4 @@
-package main
+package gui
 
 import (
 	"github.com/andlabs/ui"
@@ -44,6 +44,16 @@ func makeTasksPage() ui.Control {
 
 	h := ui.NewHorizontalBox()
 	h.SetPadded(true)
+
+	h.Append(ui.NewButton("Add"), false)
+	h.Append(ui.NewButton("Run"), false)
+	h.Append(ui.NewButton("Stop"), false)
+
+	// Not sure.
+	_tt := _taskstables()
+	t := _tt.newTasksTable()
+
+	v.Append(t, true)
 	v.Append(h, false)
 	return v
 }
@@ -58,6 +68,6 @@ func makeBillingPage() ui.Control {
 	return v
 }
 
-func main() {
+func Execute() {
 	ui.Main(setupUI)
 }
