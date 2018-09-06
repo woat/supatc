@@ -1,9 +1,7 @@
-// Package inv is used to find, parse, and locate all items stocked. The amount
-// of recursion found here does make me a bit sad.
+// Package inv is used to find, parse, and locate all items stocked.
 package inv
 
 import (
-	"fmt"
 	"golang.org/x/net/html"
 	"io/ioutil"
 	"net/http"
@@ -69,7 +67,6 @@ func parseLinkNodes(raw string) []Item {
 }
 
 func rLinkSearch(n *html.Node, l *[]Item) {
-	fmt.Println(n.Data)
 	if hasTag("a", n) {
 		for _, attr := range n.Attr {
 			if hasItemLink(attr) {
@@ -93,7 +90,6 @@ func hasItemLink(a html.Attribute) bool {
 	return a.Key == "href" && r.MatchString(a.Val)
 }
 
-// The usage of pointers in this function makes me feel sad.
 func fetchItemInfo(l *[]Item, d *Downloader) {
 	var is []Item
 	mx := &sync.Mutex{}

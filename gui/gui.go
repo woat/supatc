@@ -4,16 +4,16 @@ import (
 	"github.com/andlabs/ui"
 )
 
-var mwin *ui.Window
+var mainwin *ui.Window
 
 func setupUI() {
-	mwin = ui.NewWindow("supatc", 640, 480, true)
-	mwin.OnClosing(func(*ui.Window) bool {
+	mainwin = ui.NewWindow("supatc", 640, 480, true)
+	mainwin.OnClosing(func(*ui.Window) bool {
 		ui.Quit()
 		return true
 	})
 	ui.OnShouldQuit(func() bool {
-		mwin.Destroy()
+		mainwin.Destroy()
 		return true
 	})
 
@@ -30,12 +30,13 @@ func setupUI() {
 		t.SetMargined(3, true)
 	*/
 
-	mwin.SetChild(t)
-	mwin.SetMargined(true)
+	mainwin.SetChild(t)
+	mainwin.SetMargined(true)
 
-	mwin.Show()
+	mainwin.Show()
 }
 
+// see taskstable.go
 func makeTasksPage() ui.Control {
 	v := ui.NewVerticalBox()
 	v.SetPadded(true)
@@ -47,9 +48,7 @@ func makeTasksPage() ui.Control {
 	h.Append(ui.NewButton("Run"), false)
 	h.Append(ui.NewButton("Stop"), false)
 
-	// Not sure.
-	_tt := _taskstables()
-	t := _tt.newTasksTable()
+	t := newTasksTable()
 
 	v.Append(t, true)
 	v.Append(h, false)
