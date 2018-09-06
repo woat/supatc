@@ -49,7 +49,7 @@ func TestFind(t *testing.T) {
 }
 
 func TestRetrieve(t *testing.T) {
-	d := NewDownloader(mockPageFetcher)
+	d := NewDownloader(bmPageFetcher)
 	actual := Retrieve(d)
 	expected := []Item{
 		Item{"item_name_1", "item_cat_1", "item_slug_1"},
@@ -65,7 +65,7 @@ func TestRetrieve(t *testing.T) {
 }
 
 // URLs are generated from shop.html
-func mockPageFetcher(url string) string {
+func tdPageFetcher(url string) string {
 	s := strings.Split(url, "/")
 
 	slug := s[3]
@@ -93,4 +93,49 @@ func compareItems(a, b []Item) bool {
 		c ^= int(x)
 	}
 	return c == 0
+}
+
+func bmPageFetcher(url string) string {
+	s := strings.Split(url, "/")
+
+	slug := s[3]
+	if len(s) > 4 {
+		slug = s[4] + "-" + s[5]
+	}
+
+	ttslug := "testdata/benchmarks/" + slug + ".html"
+
+	if verboseLogging {
+		fmt.Printf("Actual URL -> %v \n", url)
+		fmt.Printf("Test URL   -> %v \n\n", ttslug)
+	}
+
+	d, _ := ioutil.ReadFile(ttslug)
+	return string(d)
+}
+
+func BenchmarkRetrieve(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		d := NewDownloader(bmPageFetcher)
+		Retrieve(d)
+	}
+}
+
+func BenchmarkParseLinkNodes(b *testing.B) {
+	for i := 0; i < b.N; i++ {
+		raw := "testdata/benchmarks/shop.html"
+		parseLinkNodes(raw)
+	}
+}
+
+func BenchmarkFetchItemInfo(b *testing.B) {
+	d := NewDownloader(bmPageFetcher)
+	raw := d.download("")
+	items := parseLinkNodes(raw)
+	mockItems := items
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		fetchItemInfo(&mockItems, d)
+		mockItems = items
+	}
 }
