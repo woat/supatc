@@ -1,0 +1,2 @@
+inv/testdata/benchmarks/*.html linguist-generated
+inv/testdata/*.html linguist-vendored
