@@ -42,7 +42,7 @@ func newTasksTable() *ui.Table {
 	})
 
 	table.AppendTextColumn("ID", 0, ui.TableModelColumnNeverEditable, nil)
-	table.AppendTextColumn("Product", 1, ui.TableModelColumnNeverEditable, nil)
+	table.AppendTextColumn("Keywords", 1, ui.TableModelColumnNeverEditable, nil)
 	table.AppendTextColumn("Size", 2, ui.TableModelColumnNeverEditable, nil)
 	table.AppendTextColumn("Profile", 3, ui.TableModelColumnNeverEditable, nil)
 	table.AppendTextColumn("Status", 4, ui.TableModelColumnNeverEditable, nil)
