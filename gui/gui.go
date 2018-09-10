@@ -17,52 +17,55 @@ func setupUI() {
 		return true
 	})
 
-	t := ui.NewTab()
+	tabs := ui.NewTab()
 
-	t.Append("Tasks", makeTasksPage())
-	t.SetMargined(0, true)
-	t.Append("Billing", makeBillingPage())
-	t.SetMargined(1, true)
+	tabs.Append("Tasks", makeTasksPage())
+	tabs.SetMargined(0, true)
+	tabs.Append("Billing", makeBillingPage())
+	tabs.SetMargined(1, true)
 	/*
-		t.Append("Cards", makeAccountsPage())
-		t.SetMargined(2, true)
-		t.Append("Settings", makeSettingsPage)
-		t.SetMargined(3, true)
+		tabs.Append("Cards", makeAccountsPage())
+		tabs.SetMargined(2, true)
+		tabs.Append("Settings", makeSettingsPage)
+		tabs.SetMargined(3, true)
 	*/
 
-	mainwin.SetChild(t)
+	mainwin.SetChild(tabs)
 	mainwin.SetMargined(true)
 
 	mainwin.Show()
 }
 
-// see taskstable.go
 func makeTasksPage() ui.Control {
-	v := ui.NewVerticalBox()
-	v.SetPadded(true)
+	vbox := ui.NewVerticalBox()
+	vbox.SetPadded(true)
 
-	h := ui.NewHorizontalBox()
-	h.SetPadded(true)
+	hbox := ui.NewHorizontalBox()
+	hbox.SetPadded(true)
 
-	h.Append(ui.NewButton("Add"), false)
-	h.Append(ui.NewButton("Run"), false)
-	h.Append(ui.NewButton("Stop"), false)
+	add := ui.NewButton("Add")
+	add.OnClicked(func(*ui.Button) {
+		addTasksInput()
+	})
+	hbox.Append(add, false)
+	hbox.Append(ui.NewButton("Run"), false)
+	hbox.Append(ui.NewButton("Stop"), false)
 
-	t := newTasksTable()
+	table := newTasksTable()
 
-	v.Append(t, true)
-	v.Append(h, false)
-	return v
+	vbox.Append(table, true)
+	vbox.Append(hbox, false)
+	return vbox
 }
 
 func makeBillingPage() ui.Control {
-	v := ui.NewVerticalBox()
-	v.SetPadded(true)
+	vbox := ui.NewVerticalBox()
+	vbox.SetPadded(true)
 
-	h := ui.NewHorizontalBox()
-	h.SetPadded(true)
-	v.Append(h, false)
-	return v
+	hbox := ui.NewHorizontalBox()
+	hbox.SetPadded(true)
+	vbox.Append(hbox, false)
+	return vbox
 }
 
 func Execute() {

@@ -61,23 +61,23 @@ func parseLinkNodes(raw string) []Item {
 		panic(err)
 	}
 
-	l := []Item{}
-	rLinkSearch(doc, &l)
-	return l
+	itemList := []Item{}
+	rLinkSearch(doc, &itemList)
+	return itemList
 }
 
-func rLinkSearch(n *html.Node, l *[]Item) {
-	if hasTag("a", n) {
-		for _, attr := range n.Attr {
+func rLinkSearch(node *html.Node, itemList *[]Item) {
+	if hasTag("a", node) {
+		for _, attr := range node.Attr {
 			if hasItemLink(attr) {
-				s := strings.Split(attr.Val, "/")
-				*l = append(*l, Item{Category: s[2], Slug: s[3]})
+				path := strings.Split(attr.Val, "/")
+				*itemList = append(*itemList, Item{Category: path[2], Slug: path[3]})
 			}
 		}
 	}
 
-	for cn := n.FirstChild; cn != nil; cn = cn.NextSibling {
-		rLinkSearch(cn, l)
+	for childNode := node.FirstChild; childNode != nil; childNode = childNode.NextSibling {
+		rLinkSearch(childNode, itemList)
 	}
 }
 
@@ -86,13 +86,13 @@ func hasTag(t string, n *html.Node) bool {
 }
 
 func hasItemLink(a html.Attribute) bool {
-	r, _ := regexp.Compile("/shop/.*?/.*")
-	return a.Key == "href" && r.MatchString(a.Val)
+	pattern, _ := regexp.Compile("/shop/.*?/.*")
+	return a.Key == "href" && pattern.MatchString(a.Val)
 }
 
 func fetchItemInfo(l *[]Item, d *Downloader) {
-	var is []Item
-	mx := &sync.Mutex{}
+	var inStock []Item
+	mutex := &sync.Mutex{}
 
 	var wg sync.WaitGroup
 	wg.Add(len(*l))
@@ -103,15 +103,15 @@ func fetchItemInfo(l *[]Item, d *Downloader) {
 			raw := d.download("/" + (*l)[i].Category + "/" + (*l)[i].Slug)
 			if !outOfStock(raw) {
 				(*l)[i].Name = parseItemName(raw)
-				mx.Lock()
-				is = append(is, (*l)[i])
-				mx.Unlock()
+				mutex.Lock()
+				inStock = append(inStock, (*l)[i])
+				mutex.Unlock()
 			}
 		}(i, l)
 	}
 
 	wg.Wait()
-	*l = is
+	*l = inStock
 }
 
 func outOfStock(raw string) bool {

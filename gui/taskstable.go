@@ -17,7 +17,7 @@ func (mh *modelHandler) ColumnTypes(m *ui.TableModel) []ui.TableValue {
 }
 
 func (mh *modelHandler) NumRows(m *ui.TableModel) int {
-	return 5
+	return 1
 }
 
 func (mh *modelHandler) CellValue(m *ui.TableModel, row, column int) ui.TableValue {
@@ -34,17 +34,17 @@ func newModelHandler() *modelHandler {
 }
 
 func newTasksTable() *ui.Table {
-	h := newModelHandler()
-	m := ui.NewTableModel(h)
-	t := ui.NewTable(&ui.TableParams{
-		Model:                         m,
+	modelHandler := newModelHandler()
+	model := ui.NewTableModel(modelHandler)
+	table := ui.NewTable(&ui.TableParams{
+		Model:                         model,
 		RowBackgroundColorModelColumn: -1,
 	})
 
-	t.AppendTextColumn("ID", 0, ui.TableModelColumnNeverEditable, nil)
-	t.AppendTextColumn("Product", 1, ui.TableModelColumnNeverEditable, nil)
-	t.AppendTextColumn("Size", 2, ui.TableModelColumnNeverEditable, nil)
-	t.AppendTextColumn("Profile", 3, ui.TableModelColumnNeverEditable, nil)
-	t.AppendTextColumn("Status", 4, ui.TableModelColumnNeverEditable, nil)
-	return t
+	table.AppendTextColumn("ID", 0, ui.TableModelColumnNeverEditable, nil)
+	table.AppendTextColumn("Product", 1, ui.TableModelColumnNeverEditable, nil)
+	table.AppendTextColumn("Size", 2, ui.TableModelColumnNeverEditable, nil)
+	table.AppendTextColumn("Profile", 3, ui.TableModelColumnNeverEditable, nil)
+	table.AppendTextColumn("Status", 4, ui.TableModelColumnNeverEditable, nil)
+	return table
 }
