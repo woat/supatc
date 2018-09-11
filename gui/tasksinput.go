@@ -5,7 +5,7 @@ import (
 )
 
 func addTasksInput() {
-	window := ui.NewWindow("supatc - Add Tasks", 300, 300, false)
+	window := ui.NewWindow("supatc - Add Tasks", 300, 600, false)
 	vbox := ui.NewVerticalBox()
 	group := ui.NewGroup("Add new tasks, separate keywords with ;")
 	group.SetMargined(true)
@@ -26,17 +26,20 @@ func addTasksInput() {
 	profile.Append("TODO: Fill this with profiles")
 	form.Append("Profile", profile, false)
 
+	vb := ui.NewVerticalBox()
+	vb.SetPadded(true)
 	checkout := ui.NewRadioButtons()
 	checkout.Append("Lightning")
 	checkout.Append("Anti-Bot")
 	// TODO bug label shows bottom button instead of top
-	form.Append("Checkout Type", checkout, false)
+	vb.Append(checkout, false)
+	group.Append("Checkout Type", vb, false)
 
 	group.SetChild(form)
 	vbox.Append(group, true)
 
 	hbox := ui.NewHorizontalBox()
-	vbox.Append(hbox, false)
+	hbox.SetPadded(true)
 
 	submit := ui.NewButton("Add")
 	submit.OnClicked(func(*ui.Button) {
@@ -50,6 +53,7 @@ func addTasksInput() {
 
 	hbox.Append(submit, false)
 	hbox.Append(cancel, false)
+	vbox.Append(hbox, false)
 
 	window.SetMargined(true)
 	window.SetChild(vbox)

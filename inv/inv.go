@@ -123,17 +123,17 @@ func outOfStock(raw string) bool {
 	return rStockSearch(doc)
 }
 
-func rStockSearch(n *html.Node) bool {
-	if hasTag("b", n) {
-		for _, attr := range n.Attr {
+func rStockSearch(node *html.Node) bool {
+	if hasTag("b", node) {
+		for _, attr := range node.Attr {
 			if attr.Key == "class" {
 				return true
 			}
 		}
 	}
 
-	for cn := n.FirstChild; cn != nil; cn = cn.NextSibling {
-		res := rStockSearch(cn)
+	for childNode := node.FirstChild; childNode != nil; childNode = childNode.NextSibling {
+		res := rStockSearch(childNode)
 		if res != false {
 			return res
 		}
@@ -151,12 +151,12 @@ func parseItemName(raw string) string {
 	return rNameSearch(doc)
 }
 
-func rNameSearch(n *html.Node) string {
-	if hasTag("title", n) {
-		return n.FirstChild.Data
+func rNameSearch(node *html.Node) string {
+	if hasTag("title", node) {
+		return node.FirstChild.Data
 	}
 
-	for cn := n.FirstChild; cn != nil; cn = cn.NextSibling {
+	for cn := node.FirstChild; cn != nil; cn = cn.NextSibling {
 		title := rNameSearch(cn)
 		if title != "" {
 			return title
