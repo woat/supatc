@@ -26,14 +26,11 @@ func addTasksInput() {
 	profile.Append("TODO: Fill this with profiles")
 	form.Append("Profile", profile, false)
 
-	vb := ui.NewVerticalBox()
-	vb.SetPadded(true)
 	checkout := ui.NewRadioButtons()
 	checkout.Append("Lightning")
 	checkout.Append("Anti-Bot")
 	// TODO bug label shows bottom button instead of top
-	vb.Append(checkout, false)
-	group.Append("Checkout Type", vb, false)
+	form.Append("Checkout Type", checkout, false)
 
 	group.SetChild(form)
 	vbox.Append(group, true)
