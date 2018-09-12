@@ -3,6 +3,8 @@
 
 [![Build Status](https://travis-ci.com/woat/supatc.svg?branch=master)](https://travis-ci.com/woat/supatc)
 
+[![Report Card](https://goreportcard.com/report/github.com/woat/supatc)](https://goreportcard.com/badge/github.com/woat/supatc)
+
 Specs Implemented (so far):
 - Automatic SKU lookup by availability.
 - Automatic SKU lookup by keywords.
