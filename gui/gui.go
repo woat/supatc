@@ -6,6 +6,10 @@ import (
 
 var mainwin *ui.Window
 
+func Execute() {
+	ui.Main(setupUI)
+}
+
 func setupUI() {
 	mainwin = ui.NewWindow("supatc", 640, 480, true)
 	mainwin.OnClosing(func(*ui.Window) bool {
@@ -47,6 +51,7 @@ func makeTasksPage() ui.Control {
 	add.OnClicked(func(*ui.Button) {
 		addTasksInput()
 	})
+
 	hbox.Append(add, false)
 	hbox.Append(ui.NewButton("Run"), false)
 	hbox.Append(ui.NewButton("Stop"), false)
@@ -66,8 +71,4 @@ func makeBillingPage() ui.Control {
 	hbox.SetPadded(true)
 	vbox.Append(hbox, false)
 	return vbox
-}
-
-func Execute() {
-	ui.Main(setupUI)
 }

@@ -22,7 +22,7 @@ func (mh *modelHandler) NumRows(m *ui.TableModel) int {
 
 func (mh *modelHandler) CellValue(m *ui.TableModel, row, column int) ui.TableValue {
 	if column == 0 {
-		return ui.TableString("owo")
+		return ui.TableString("oo")
 	}
 	return ui.TableString("default")
 }
