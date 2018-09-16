@@ -1,8 +1,7 @@
 
 # supatc
 
-
-##### Current Status: starting to get somewhat useful
+[![Build Status](https://travis-ci.com/woat/supatc.svg?branch=master)](https://travis-ci.com/woat/supatc) [![Report Card](https://goreportcard.com/badge/github.com/woat/supatc)](https://goreportcard.com/report/github.com/woat/supatc)
 
 Specs Implemented (so far):
 - Automatic SKU lookup by availability.
